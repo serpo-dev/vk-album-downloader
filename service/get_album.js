@@ -1,5 +1,12 @@
 const { TOKEN, VK_API_VERSION, USER_ID, ALBUM_ID, BATCH_SIZE } = require("../params")
 
+const findFull = (item) => {
+    const { sizes } = item;
+    const sorted = sizes.sort((a, b) => a.height - b.height);
+    const last = sorted.length - 1;
+    return sorted[last];
+}
+
 const get_album = () => {
     return new Promise(resolve => {
 
@@ -33,8 +40,7 @@ const get_album = () => {
             const current = data.length + response.items.length;
 
             response.items.forEach(item => {
-                const last = item.sizes.length - 1;
-                const url = item.sizes[last].url;
+                const url = findFull(item).url;
                 data.push(url);
 
                 console.log(`Processing... ${data.length} / ${total}`)
